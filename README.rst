@@ -35,11 +35,12 @@ Features
   types.
 - A pluggable HTML processor for transforming WYSIWYG entered HTML into Article
   components. Currently this it includes the following functions:
-    - Translating class attributes into `ANF text style`_ attributes
-    - Resolving UID based urls
-    - Converting image tags into Photo/Image components and including internal
-      images in the ANF article bundle
-    - Stripping out all HTML elements and attributes not supported by ANF
+
+  - Translating class attributes into `ANF text style`_ attributes
+  - Resolving UID based urls
+  - Converting image tags into Photo/Image components and including internal
+    images in the ANF article bundle
+  - Stripping out all HTML elements and attributes not supported by ANF
 
 To Do
 -----
