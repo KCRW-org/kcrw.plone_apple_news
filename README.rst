@@ -73,6 +73,30 @@ install the "Apple News Integration" add-on from the Site Setup -> Add-ons
 control panel.
 
 
+Quick Start
+-----------
+
+You'll need an Apple News Publisher account to make full use of this add-on.
+The first step is creating an account and getting API key and Channel
+information in `News Publisher`_. Apple provides
+`detailed documentation for News Publisher`_ as well. Once you hav a account
+setup and have installed the add-on you can enter your account information in
+the "Apple News Settings" control panel under Plone Site Setup.
+
+Go to the "Dexterity Content Types" panel select the "News Item" type
+(this add-on will work with other types, but "News Item" is the obvious
+choice for testing), and use the "Behaviors" tab to enable the
+"Apple News Integration" behavior. Now when viewing a News Item you
+should see options under the toolbar "Actions" menu to
+"Create Apple News Article" and "Export Apple News Article as ZIP".
+The former uploads your article to your channel, and the latter (which
+is available even if you don't have API credentials set) downloads
+a ZIP file of the ANF formatted article for debugging/review
+and preview in the News Preview app. Once you've used the "Create"
+action, it will be replaced with actions to "Update" and "Delete"
+the article from your Apple News Channel.
+
+
 Contribute
 ----------
 
@@ -95,3 +119,5 @@ The project is licensed under the GPLv2.
 .. _Apple News API: https://developer.apple.com/documentation/apple_news/apple_news_api
 .. _Apple News Format (ANF): https://developer.apple.com/documentation/apple_news/apple_news_format_tutorials
 .. _ANF text style: https://developer.apple.com/documentation/apple_news/textstyle
+.. _News Publisher: https://www.icloud.com/newspublisher/
+.. _detailed documentation for News Publisher: https://support.apple.com/guide/news-publisher/welcome/icloud
