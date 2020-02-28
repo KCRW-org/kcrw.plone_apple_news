@@ -3,8 +3,8 @@ kcrw.plone_apple_news
 =====================
 
 This package provides a Plone addon that integrates publishing CMS content to
-Apple News using the `Apple News API`_. It provides a variety of components that
-attempt to render content objects into `Apple News Format (ANF)`_ articles.
+Apple News using the `Apple News API`_. It provides a variety of features that
+attempt to render Plone content into `Apple News Format (ANF)`_ articles.
 This package is intended to be used by a variety of audiences:
 
 - Content managers can manually create, update and delete Apple News articles
@@ -16,6 +16,10 @@ This package is intended to be used by a variety of audiences:
 - Developers can register event handlers to perform Apple News API actions,
   adapters to provide custom rendering of specific content, and register custom
   functions for transforming HTML content into Apple News components.
+
+This add-on relies on the `kcrw.apple_news`_ python library, which is
+documented at `kcrw.apple_news Read the Docs`_.
+
 
 Features
 --------
@@ -118,6 +122,7 @@ The project is licensed under the GPLv2.
 
 .. _Apple News API: https://developer.apple.com/documentation/apple_news/apple_news_api
 .. _Apple News Format (ANF): https://developer.apple.com/documentation/apple_news/apple_news_format_tutorials
+.. _kcrw.apple_news Read the Docs: https://kcrwapple-news.readthedocs.io
 .. _ANF text style: https://developer.apple.com/documentation/apple_news/textstyle
 .. _News Publisher: https://www.icloud.com/newspublisher/
 .. _detailed documentation for News Publisher: https://support.apple.com/guide/news-publisher/welcome/icloud
