@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="kcrw.plone_apple_news">
+
+  <!-- Control panel -->
+  <browser:page
+      name="apple-news-settings"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.AppleNewsSettingsControlPanel"
+      permission="plone.app.controlpanel.Overview"
+      layer="..interfaces.IKcrwPloneAppleNewsLayer"
+      />
+
+  <browser:page
+      name="apple-news-actions"
+      for="..interfaces.IAppleNewsSupport"
+      class=".utils.AppleNewsActions"
+      permission="kcrw.plone_apple_news.Manage"
+      layer="..interfaces.IKcrwPloneAppleNewsLayer"
+      />
+
+</configure>

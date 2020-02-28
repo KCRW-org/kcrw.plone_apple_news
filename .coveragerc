@@ -1,0 +1,6 @@
+[report]
+include =
+    src/kcrw/*
+omit =
+    */test*
+    */upgrades/*

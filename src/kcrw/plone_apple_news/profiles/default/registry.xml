@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<registry
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="kcrw.plone_apple_news">
+  <records interface="kcrw.plone_apple_news.interfaces.IAppleNewsSettings"
+           prefix="kcrw.apple_news" />
+</registry>

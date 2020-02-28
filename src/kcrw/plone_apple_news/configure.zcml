@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="kcrw.plone_apple_news">
+
+  <i18n:registerTranslations directory="locales" />
+  <include file="permissions.zcml" />
+  <include package=".browser" />
+  <include package=".actions" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="Apple News Integration"
+      directory="profiles/default"
+      description="Installs the kcrw.plone_apple_news add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="Apple News Integration (uninstall)"
+      directory="profiles/uninstall"
+      description="Uninstalls the kcrw.plone_apple_news add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.uninstall"
+      />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="kcrw.plone_apple_news-hiddenprofiles"
+      />
+
+  <plone:behavior
+      title="Apple News Integration"
+      name="kcrw.plone_apple_news"
+      description="Adds support for uploading/managing content as Apple News articles"
+      provides=".interfaces.IAppleNewsSupport"
+      for="plone.dexterity.interfaces.IDexterityContent"
+      />
+
+  <adapter factory=".adapter.AppleNewsActions" />
+  <adapter factory=".adapter.BaseAppleNewsGenerator" />
+
+</configure>

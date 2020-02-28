@@ -1,0 +1,87 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="plone">
+
+    <!-- Delete action -->
+
+    <adapter factory=".delete.DeleteActionExecutor" />
+
+    <browser:page
+      for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+      name="kcrw.apple_news_actions.delete"
+      class=".delete.DeleteAddForm"
+      permission="plone.app.contentrules.ManageContentRules"
+      />
+
+    <plone:ruleAction
+        name="kcrw.apple_news_actions.delete"
+        title="Delete Apple News Article"
+        description="Delete an Apple News article"
+        for="..interfaces.IAppleNewsSupport"
+        event="*"
+        addview="kcrw.apple_news_actions.delete"
+        schema=".delete.IAppleNewsDeleteAction"
+        factory=".delete.DeleteAction"
+        />
+
+    <!-- metadata action -->
+    <adapter factory=".metadata.MetadataActionExecutor" />
+
+    <browser:page
+      for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+      name="kcrw.apple_news_actions.metadata"
+      class=".metadata.MetadataAddFormView"
+      permission="plone.app.contentrules.ManageContentRules"
+      />
+
+    <browser:page
+        for=".metadata.IAppleNewsMetadataAction"
+        name="edit"
+        class=".metadata.MetadataEditFormView"
+        permission="plone.app.contentrules.ManageContentRules"
+      />
+
+    <plone:ruleAction
+        name="kcrw.apple_news_actions.metadata"
+        title="Update Apple News Article Metadata"
+        description="Update Apple News article metadata (e.g. publish)"
+        for="..interfaces.IAppleNewsSupport"
+        event="*"
+        addview="kcrw.apple_news_actions.metadata"
+        editview="edit"
+        schema=".metadata.IAppleNewsMetadataAction"
+        factory=".metadata.MetadataAction"
+        />
+
+    <!-- upload action -->
+    <adapter factory=".upload.UploadActionExecutor" />
+
+    <browser:page
+      for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+      name="kcrw.apple_news_actions.upload"
+      class=".upload.UploadAddFormView"
+      permission="plone.app.contentrules.ManageContentRules"
+      />
+
+    <browser:page
+        for=".upload.IAppleNewsUploadAction"
+        name="edit"
+        class=".upload.UploadEditFormView"
+        permission="plone.app.contentrules.ManageContentRules"
+      />
+
+    <plone:ruleAction
+        name="kcrw.apple_news_actions.upload"
+        title="Upload Apple News Article"
+        description="Create or update an Apple News article"
+        for="..interfaces.IAppleNewsSupport"
+        event="*"
+        addview="kcrw.apple_news_actions.upload"
+        editview="edit"
+        schema=".upload.IAppleNewsUploadAction"
+        factory=".upload.UploadAction"
+        />
+
+</configure>

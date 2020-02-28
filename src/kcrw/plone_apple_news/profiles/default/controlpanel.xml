@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<object
+    name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="kcrw.plone_apple_news"
+    purge="False">
+
+    <configlet
+        title="Apple News Settings"
+        action_id="apple_news_settings"
+        appId="kcrw.plone_apple_news"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@apple-news-settings"
+        visible="True"
+        i18n:attributes="title">
+            <permission>Plone Site Setup: Overview</permission>
+    </configlet>
+
+</object>

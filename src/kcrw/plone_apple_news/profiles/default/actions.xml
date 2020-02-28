@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<object name="portal_actions" meta_type="Plone Actions Tool"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <action-provider name="portal_actions" />
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <object name="apple_news_create" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Create Apple News Article</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:$object_url/@@apple-news-actions/create-article</property>
+   <property
+      name="available_expr">object/@@apple-news-actions/can_create|nothing</property>
+   <property name="permissions">
+    <element value="Apple News: Manage News Content"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="apple_news_update" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Update Apple News Article</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:$object_url/@@apple-news-actions/update-article</property>
+   <property
+      name="available_expr">object/@@apple-news-actions/can_update|nothing</property>
+   <property name="permissions">
+    <element value="Apple News: Manage News Content"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="apple_news_delete" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Delete Apple News Article</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:$object_url/@@apple-news-actions/delete-article</property>
+   <property
+      name="available_expr">object/@@apple-news-actions/can_delete|nothing</property>
+   <property name="permissions">
+    <element value="Apple News: Manage News Content"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="apple_news_export" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Export Apple News Article as ZIP</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:$object_url/@@apple-news-actions/export-article</property>
+   <property name="permissions">
+    <element value="Apple News: Manage News Content"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+</object>
+</object>
