@@ -54,7 +54,7 @@ setup(
         'setuptools',
         # -*- Extra requirements: -*-
         'six',
-        'plone.api>=1.8.4',
+        'plone.api',
         'plone.app.dexterity',
         'kcrw.apple_news',
         'plone.outputfilters',
