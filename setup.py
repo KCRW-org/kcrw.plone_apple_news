@@ -59,6 +59,7 @@ setup(
         'kcrw.apple_news',
         'plone.outputfilters',
         'plone.app.contentrules',
+        'lxml>=3.1.0'
     ],
     extras_require={
         'test': [

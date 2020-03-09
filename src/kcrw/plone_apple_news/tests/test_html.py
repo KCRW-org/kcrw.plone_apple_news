@@ -10,6 +10,8 @@ from kcrw.plone_apple_news.html import el_list_to_html
 from kcrw.plone_apple_news.html import fix_hrefs
 from kcrw.plone_apple_news.html import find_images
 from kcrw.plone_apple_news.html import split_images
+from kcrw.plone_apple_news.html import find_videos
+from kcrw.plone_apple_news.html import split_videos
 from kcrw.plone_apple_news.html import strip_outer
 from kcrw.plone_apple_news.html import process_html
 
@@ -325,6 +327,57 @@ class TestImageSplitter(unittest.TestCase):
         self.assertEquals(img_info1.get('src'), 'replaced-src-interior1')
         self.assertEquals(img_info2.get('src'), 'replaced-src-interior2')
         self.assertEquals(span.tail, ' Post span Image1 tail Image2 tail')
+
+
+class TestWebVideoSplitter(unittest.TestCase):
+    """Test that kcrw.plone_apple_news is properly installed."""
+
+    def setUp(self):
+        self.tree = etree.Element('div')
+        self.p = etree.Element('p')
+        self.frame1 = etree.Element('iframe')
+        self.frame1.set('src', 'https://www.youtube.com/embed/NBFypqjNlOA')
+        # Add parents for these elements
+        self.tree.append(self.p)
+        self.tree.append(self.frame1)
+        self.frame2 = etree.Element('iframe')
+        self.frame2.set('src', 'https://nonsense.com/embed')
+        self.p.append(self.frame2)
+        self.frame3 = etree.Element('iframe')
+        self.frame3.set('src', 'https://vimeo.com/embed/98274987')
+        self.p.append(self.frame3)
+
+    def test_find_videos(self, resolver):
+        # returns all images in order, and False if no images are found
+        matching_frames = find_videos(self.tree)
+        self.assertEquals(len(matching_frames), 2)
+        self.assertIs(matching_frames[0], self.frame3)
+        self.assertIs(matching_frames[1], self.frame1)
+
+        p_frames = find_images(self.p)
+        self.assertEquals(len(p_frames), 1)
+        self.assertIs(p_frames[0], self.frame3)
+
+        frame = find_images(self.frame1)
+        self.assertEquals(len(frame), 1)
+        self.assertIs(frame[0], self.frame1)
+
+    def test_split_videos(self, resolver):
+        # Running split on an element containing a video will remove it
+        # and create a video component to be rendered after the currently
+        # processed set of components
+        self.assertEqual(len(self.tree.findall('.//frame')), 3)
+        self.assertEqual(len(self.p.findall('.//frame')), 2)
+
+        before, after = split_videos([self.p], after_anchor='next-p')
+        self.assertEqual(len(self.tree.findall('.//frame')), 2)
+        self.assertEqual(len(self.p.findall('.//frame')), 1)
+
+        self.assertEquals(len(before), 0)
+        self.assertEquals(len(after), 1)
+        self.assertEquals(after[0]['role'], 'embedwebvideo')
+        self.assertEquals(after[0]['URL'], 'https://vimeo.com/embed/98274987')
+        self.assertEquals(after[0]['anchor']['target'], 'next-p')
 
 
 @mock.patch(

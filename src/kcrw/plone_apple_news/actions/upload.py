@@ -1,9 +1,6 @@
 from OFS.SimpleItem import SimpleItem
 from zope import schema
 from plone.app.contentrules import PloneMessageFactory as _
-from plone.app.contentrules.actions import ActionAddForm
-from plone.app.contentrules.actions import ActionEditForm
-from plone.app.contentrules.browser.formhelper import ContentRuleFormWrapper
 from plone.contentrules.rule.interfaces import IExecutable
 from plone.contentrules.rule.interfaces import IRuleElementData
 from Products.CMFPlone import utils
@@ -66,33 +63,3 @@ class UploadActionExecutor(object):
             message = _(u"Unable to upload Apple News article for ${name} as part of content rule: ${error}",  # noqa
                           mapping={'name': title, 'error': error})
             IStatusMessage(request).addStatusMessage(message, type='error')
-
-
-class UploadAddForm(ActionAddForm):
-    """An add form for apple news upload actions.
-    """
-    schema = IAppleNewsUploadAction
-    label = _(u'Add Apple News Upload Action')
-    description = _(u'This action creates or updates an Apple News Article '
-                    u'from a content object.')
-    Type = UploadAction
-
-
-class UploadAddFormView(ContentRuleFormWrapper):
-    form = UploadAddForm
-
-
-class UploadEditForm(ActionEditForm):
-    """An edit form for apple news upload rule action.
-
-    z3c.form does all the magic here.
-    """
-    schema = IAppleNewsUploadAction
-    label = _(u'Edit Apple News Upload Action')
-    description = _(u'This action creates or updates an Apple News Article '
-                    u'from a content object.')
-    form_name = _(u'Configure action')
-
-
-class UploadEditFormView(ContentRuleFormWrapper):
-    form = UploadEditForm

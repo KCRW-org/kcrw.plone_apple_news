@@ -1,3 +1,4 @@
+import re
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
@@ -5,6 +6,11 @@ from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCapt
 from .templates import ALLOWED_HTML_TAGS
 from .templates import ALLOWED_HTML_ATTRS
 from .utils import get_settings
+
+
+VIDEO_RE = re.compile(
+    r'^https?://([^\.]+\.)?((youtube\.com)|(youtu\.be)|(vimeo\.com))'
+)
 
 
 def obj_url(obj):
@@ -162,6 +168,37 @@ def split_images(imgs, before_anchor=None, after_anchor=None, context=None):
     return before_parts, after_parts
 
 
+def find_videos(el):
+    matches = []
+    frames = el.findall(".//iframe")
+    if el.tag != 'iframe' and not len(frames):
+        return matches
+    if el.tag == 'iframe':
+        frames = [el]
+    for f in frames:
+        if VIDEO_RE.match(f.get('src')):
+            matches.append(f)
+    return matches
+
+
+def split_videos(frames, before_anchor=None, after_anchor=None, context=None):
+    embeds = []
+    for f in frames:
+        component = {
+            "role": "embedwebvideo",
+            "URL": f.get('src'),
+            'layout': 'bodyVideoEmbed',
+            'style': 'bodyVideoEmbedStyle',
+        }
+        if after_anchor:
+            component["anchor"] = {
+                "target": after_anchor,
+                "targetAnchorPosition": "top"
+            }
+        embeds.append(component)
+    return [], embeds
+
+
 class HTMLProcessorRegistry(object):
     def __init__(self):
         self.filter_registry = []
@@ -212,6 +249,7 @@ processor_registry = HTMLProcessorRegistry()
 processor_registry.register_filter('class_styles', class_to_style)
 processor_registry.register_filter('resolve_hrefs', fix_hrefs)
 processor_registry.register_splitter('images', find_images, split_images)
+processor_registry.register_splitter('webvideo', find_videos, split_videos)
 
 
 def process_html(text, context):

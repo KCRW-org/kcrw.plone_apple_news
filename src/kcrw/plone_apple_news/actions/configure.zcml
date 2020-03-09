@@ -32,14 +32,14 @@
     <browser:page
       for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
       name="kcrw.apple_news_actions.metadata"
-      class=".metadata.MetadataAddFormView"
+      class=".forms.MetadataAddFormView"
       permission="plone.app.contentrules.ManageContentRules"
       />
 
     <browser:page
         for=".metadata.IAppleNewsMetadataAction"
         name="edit"
-        class=".metadata.MetadataEditFormView"
+        class=".forms.MetadataEditFormView"
         permission="plone.app.contentrules.ManageContentRules"
       />
 
@@ -61,14 +61,14 @@
     <browser:page
       for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
       name="kcrw.apple_news_actions.upload"
-      class=".upload.UploadAddFormView"
+      class=".forms.UploadAddFormView"
       permission="plone.app.contentrules.ManageContentRules"
       />
 
     <browser:page
         for=".upload.IAppleNewsUploadAction"
         name="edit"
-        class=".upload.UploadEditFormView"
+        class=".forms.UploadEditFormView"
         permission="plone.app.contentrules.ManageContentRules"
       />
 

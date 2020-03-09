@@ -2,9 +2,6 @@ import json
 from OFS.SimpleItem import SimpleItem
 from zope import schema
 from plone.app.contentrules import PloneMessageFactory as _
-from plone.app.contentrules.actions import ActionAddForm
-from plone.app.contentrules.actions import ActionEditForm
-from plone.app.contentrules.browser.formhelper import ContentRuleFormWrapper
 from plone.contentrules.rule.interfaces import IExecutable
 from plone.contentrules.rule.interfaces import IRuleElementData
 from Products.CMFPlone import utils
@@ -80,33 +77,3 @@ class MetadataActionExecutor(object):
             message = _(u"Unable to update Apple News article metadata for ${name} as part of content rule: ${error}",  # noqa
                           mapping={'name': title, 'error': error})
             IStatusMessage(request).addStatusMessage(message, type='error')
-
-
-class MetadataAddForm(ActionAddForm):
-    """An add form for Apple News metadata update actions.
-    """
-    schema = IAppleNewsMetadataAction
-    label = _(u'Add Apple News Metadata Action')
-    description = _(u'This action will make updates to '
-                    u'Apple News Article metadata.')
-    Type = MetadataAction
-
-
-class MetadataAddFormView(ContentRuleFormWrapper):
-    form = MetadataAddForm
-
-
-class MetadataEditForm(ActionEditForm):
-    """An edit form for Apple News metadata update rule actions.
-
-    z3c.form does all the magic here.
-    """
-    schema = IAppleNewsMetadataAction
-    label = _(u'Edit Apple News Metadata Action')
-    description = _(u'This action will make updates to '
-                    u'Apple News Article metadata.')
-    form_name = _(u'Configure action')
-
-
-class MetadataEditFormView(ContentRuleFormWrapper):
-    form = MetadataEditForm

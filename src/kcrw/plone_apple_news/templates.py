@@ -27,6 +27,7 @@ ARTICLE_BASE = {
         },
         "default-title": {
             "fontSize": 45,
+            "lineHeight": 48,
             "fontWeight": "bold",
             "hyphenation": False,
         },
@@ -64,7 +65,8 @@ ARTICLE_BASE = {
         "bodyPhotoInsetStyle": {},
         "bodyPhotoContainerStyle": {},
         "captionStyle": {},
-        "bodyImageStyle": {}
+        "bodyImageStyle": {},
+        "bodyVideoEmbedStyle": {}
     },
     "componentLayouts": {
         "headerLayout": {
@@ -74,7 +76,11 @@ ARTICLE_BASE = {
             },
         },
         "titleLayout": {},
-        "subheadLayout": {},
+        "subheadLayout": {
+            "margin": {
+                "top": 5,
+            }
+        },
         "bylineLayout": {},
         "leadPhotoContainer": {
             "ignoreViewportPadding": True,
@@ -131,7 +137,12 @@ ARTICLE_BASE = {
                 "bottom": 2,
             },
         },
-        "bodyImage": {}
+        "bodyImage": {},
+        "bodyVideoEmbed": {
+            "margin": {
+                "bottom": 60,
+            }
+        },
     },
     "metadata": {
         "generatorName": "Plone Apple News",

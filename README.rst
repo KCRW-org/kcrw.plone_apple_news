@@ -49,8 +49,6 @@ Features
 To Do
 -----
 
-- Add tag splitter to separate embeds from supported providers
-  (i.e. YouTube and Vimeo) into ANF `EmbedWebVideo` components
 - Add tag splitter for supported embed.ly plugin components
 - Add tag splitter to provide social media components for social embeds
 - Add related items module using `ArticleLink` and `ArticleThumbnail`
@@ -75,6 +73,8 @@ Install kcrw.plone_apple_news by adding it to your buildout::
 and then running ``bin/buildout``. After restarting your instance, you can
 install the "Apple News Integration" add-on from the Site Setup -> Add-ons
 control panel.
+
+If you are running Plone < 4.3.18, you may need to pin lxml>=3.1.0 in your buildout.
 
 
 Quick Start
