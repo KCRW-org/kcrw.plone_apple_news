@@ -196,6 +196,7 @@ def split_videos(frames, before_anchor=None, after_anchor=None, context=None):
                 "targetAnchorPosition": "top"
             }
         embeds.append(component)
+        f.getparent().remove(f)
     return [], embeds
 
 

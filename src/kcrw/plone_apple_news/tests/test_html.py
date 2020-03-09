@@ -180,7 +180,7 @@ class TestImageSplitter(unittest.TestCase):
         self.tree.append(self.img)
 
     def test_find_images(self, resolver):
-        # returns all images in order, and False if no images are found
+        # returns all images in order
         all_imgs = find_images(self.tree)
         self.assertEquals(len(all_imgs), 1)
         self.assertIs(all_imgs[0], self.img)
@@ -347,31 +347,31 @@ class TestWebVideoSplitter(unittest.TestCase):
         self.frame3.set('src', 'https://vimeo.com/embed/98274987')
         self.p.append(self.frame3)
 
-    def test_find_videos(self, resolver):
-        # returns all images in order, and False if no images are found
+    def test_find_videos(self):
+        # returns all video frames in order
         matching_frames = find_videos(self.tree)
         self.assertEquals(len(matching_frames), 2)
         self.assertIs(matching_frames[0], self.frame3)
         self.assertIs(matching_frames[1], self.frame1)
 
-        p_frames = find_images(self.p)
+        p_frames = find_videos(self.p)
         self.assertEquals(len(p_frames), 1)
         self.assertIs(p_frames[0], self.frame3)
 
-        frame = find_images(self.frame1)
+        frame = find_videos(self.frame1)
         self.assertEquals(len(frame), 1)
         self.assertIs(frame[0], self.frame1)
 
-    def test_split_videos(self, resolver):
+    def test_split_videos(self):
         # Running split on an element containing a video will remove it
         # and create a video component to be rendered after the currently
         # processed set of components
-        self.assertEqual(len(self.tree.findall('.//frame')), 3)
-        self.assertEqual(len(self.p.findall('.//frame')), 2)
+        self.assertEqual(len(self.tree.findall('.//iframe')), 3)
+        self.assertEqual(len(self.p.findall('.//iframe')), 2)
 
-        before, after = split_videos([self.p], after_anchor='next-p')
-        self.assertEqual(len(self.tree.findall('.//frame')), 2)
-        self.assertEqual(len(self.p.findall('.//frame')), 1)
+        before, after = split_videos([self.frame3], after_anchor='next-p')
+        self.assertEqual(len(self.tree.findall('.//iframe')), 2)
+        self.assertEqual(len(self.p.findall('.//iframe')), 1)
 
         self.assertEquals(len(before), 0)
         self.assertEquals(len(after), 1)
