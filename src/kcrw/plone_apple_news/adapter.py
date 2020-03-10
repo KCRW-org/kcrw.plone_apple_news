@@ -250,7 +250,7 @@ class BaseAppleNewsGenerator(object):
             user_info = user.get(creator)
             if user_info is not None:
                 results.append(safe_unicode(
-                    user_info.getProperty('fullame') or creator
+                    user_info.getProperty('fullname', None) or creator
                 ))
             else:
                 results.append(safe_unicode(creator))
