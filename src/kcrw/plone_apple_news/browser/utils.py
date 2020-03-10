@@ -95,11 +95,29 @@ class AppleNewsActions(BrowserView):
         """Delete an Article from Apple News"""
         adapter = self.get_adapter()
         article_id = adapter.data['id']
-        adapter.delete_article()
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"Deleted article with id: {}".format(article_id)),
-            "info"
-        )
+        try:
+            adapter.delete_article()
+        except AppleNewsError as e:
+            log('Handled Apple News Error {}: {}'.format(e, e.data))
+            if e.code == 404:
+                message = _(
+                    u'Article was already deleted ({}). Clearing Id.'.format(
+                        article_id
+                    )
+                )
+                IStatusMessage(self.request).addStatusMessage(message, "warning")
+            else:
+                message = _(
+                    u'Error {} deleting article ({}).'.format(
+                        e.code, article_id
+                    ) + u'See logs for more details.'
+                )
+                IStatusMessage(self.request).addStatusMessage(message, "error")
+        else:
+            IStatusMessage(self.request).addStatusMessage(
+                _(u"Deleted article with id: {}".format(article_id)),
+                "info"
+            )
 
     def export_article(self):
         generator = IAppleNewsGenerator(self.context)

@@ -109,7 +109,13 @@ class AppleNewsActions(object):
         """Publishes a new Apple News Article"""
         if not self.data:
             raise AppleNewsError('Article not yet published')
-        self.api.delete_article(self.data['id'])
+        try:
+            self.api.delete_article(self.data['id'])
+        except AppleNewsError as e:
+            # In case of 404 delete annotation key
+            if e.code == 404:
+                del IAnnotations(self.context)[self.annotations_key]
+            raise
         del IAnnotations(self.context)[self.annotations_key]
 
     def refresh_revision(self):
