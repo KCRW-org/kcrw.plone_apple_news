@@ -127,8 +127,7 @@ ARTICLE_BASE = {
             "columnStart": 1,
             "columnSpan": 10,
             "padding": {
-                "top": 20,
-                "bottom": 20,
+                "top": 40,
             },
         },
         "captionLayout": {
