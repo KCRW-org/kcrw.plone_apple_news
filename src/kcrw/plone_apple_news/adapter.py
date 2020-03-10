@@ -354,6 +354,7 @@ class BaseAppleNewsGenerator(object):
                         {"role": "caption",
                          "layout": "leadPhotoCaptionLayout",
                          "style": "leadPhotoCaptionStyle",
+                         "format": "html",
                          "text": caption}
                     ]
                 }
