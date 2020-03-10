@@ -154,7 +154,7 @@ class BaseAppleNewsGenerator(object):
         if authors:
             meta["authors"] = authors
         meta["excerpt"] = safe_unicode(context.Description())
-        meta["datePublished"] = context.EffectiveDate() or context.Date()
+        meta["datePublished"] = self.date().ISO8601()
         meta["dateCreated"] = context.CreationDate()
         meta["dateModified"] = context.ModificationDate()
         meta["canonicalURL"] = obj_url(context)
