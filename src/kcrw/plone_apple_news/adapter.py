@@ -25,6 +25,14 @@ from .utils import mergedicts
 from .utils import pretty_text_list
 
 
+CONTENT_TYPE_MAP = {
+    'image/png': '.png',
+    'image/jpeg': '.jpg',
+    'image/gif': '.gif',
+    'image/tiff': '.tif',
+}
+
+
 @adapter(IAppleNewsSupport)
 @implementer(IAppleNewsActions)
 class AppleNewsActions(object):
@@ -131,7 +139,7 @@ class BaseAppleNewsGenerator(object):
             self.primary_scale = getattr(settings, 'primary_scale', u'large')
             self.body_scale = getattr(settings, 'body_scale', u'large')
             if getattr(settings, 'thumb_scale', None):
-                self.primary_scale = settings.thumb_scale
+                self.thumb_scale = settings.thumb_scale
 
     def article_data(self):
         """Gets JSON formatted article data"""
@@ -182,14 +190,29 @@ class BaseAppleNewsGenerator(object):
             if field is not None:
                 image = field.get(context)
                 if image is not None:
-                    return image.getFilename()
+                    fname = image.getFilename()
+                    if not fname:
+                        fname = context.getId()
+                        if '.' not in fname:
+                            ctype = image.getContentType()
+                            ext = CONTENT_TYPE_MAP.get(ctype, '')
+                            fname += ext
+                    return fname
             return None
         # Otherwise attribute lookup
         has_image = getattr(
             aq_base(context), name, None
         ) is not None
-        if has_image is not None:
-            return getattr(context, name).filename
+        if has_image:
+            image = getattr(context, name)
+            fname = getattr(image, 'filename', None)
+            if not fname:
+                fname = context.getId()
+                if '.' not in fname:
+                    ctype = getattr(image, 'contentType', None)
+                    ext = CONTENT_TYPE_MAP.get(ctype, '')
+                    fname += ext
+            return fname
 
     def populate_image(self, context, name, scale_name):
         filename = self.get_image_filename(context, name)
