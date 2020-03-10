@@ -443,7 +443,7 @@ class BaseAppleNewsGenerator(object):
             "style": "bodyStyle",
             "components": components
         }
-        parts = self.get_body_parts()
+        parts = self.get_body_parts() or []
         total = len(parts)
         for i, part in enumerate(parts):
             if isinstance(part, six.string_types):
