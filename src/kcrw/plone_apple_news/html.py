@@ -2,6 +2,7 @@ import re
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
+from plone import api
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter  # noqa: E501
 from .templates import ALLOWED_HTML_TAGS
 from .templates import ALLOWED_HTML_ATTRS
@@ -19,6 +20,15 @@ def obj_url(obj):
         url = settings.canonical_url.rstrip('/') + obj.absolute_url(1)
     else:
         url = obj.absolute_url()
+    return url
+
+
+def transform_url(url):
+    settings = get_settings()
+    if getattr(settings, 'canonical_url', None):
+        portal_url = api.portal.get().absolute_url()
+        url = url.replace(portal_url.rstrip('/'),
+                          settings.canonical_url.rstrip('/'))
     return url
 
 
