@@ -35,7 +35,6 @@
 
   <plone:behavior
       title="Apple News Integration"
-      name="kcrw.plone_apple_news"
       description="Adds support for uploading/managing content as Apple News articles"
       provides=".interfaces.IAppleNewsSupport"
       for="plone.dexterity.interfaces.IDexterityContent"
