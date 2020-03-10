@@ -182,7 +182,7 @@ class BaseAppleNewsGenerator(object):
             if field is not None:
                 image = field.get(context)
                 if image is not None:
-                    return image.getFilename(context)
+                    return image.getFilename()
             return None
         # Otherwise attribute lookup
         has_image = getattr(
