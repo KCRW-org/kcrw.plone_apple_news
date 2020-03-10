@@ -137,12 +137,18 @@ class AppleNewsActions(BrowserView):
         return self
 
     def __call__(self, *args, **kw):
+        method_name = None
+        if hasattr(self, 'req_method'):
+            method_name = self.req_method
+
+        if not method_name:
+            return self
+
         CheckAuthenticator(self.request)
         if not _checkPermission('Apple News: Manage News Content',
                                 self.context):
             raise Unauthorized
-        if hasattr(self, 'req_method'):
-            method_name = self.req_method
+        if method_name:
             methods = {'create-article': self.create_article,
                        'update-article': self.update_article,
                        'delete-article': self.delete_article,

@@ -43,6 +43,8 @@
    <property name="title" i18n:translate="">Export Apple News Article as ZIP</property>
    <property name="description" i18n:translate=""></property>
    <property
+      name="available_expr">object/@@apple-news-actions|nothing</property>
+   <property
       name="url_expr">string:$object_url/@@apple-news-actions/export-article</property>
    <property name="permissions">
     <element value="Apple News: Manage News Content"/>

@@ -233,15 +233,22 @@ class BaseAppleNewsGenerator(object):
                 results.append(safe_unicode(creator))
         return results
 
+    def date(self):
+        context = self.context
+        date = context.EffectiveDate()
+        if not date or date == 'None':
+            date = context.Date()
+        if date and date != 'None':
+            return DateTime(date)
+
     def get_byline(self):
         context = self.context
         byline = u''
         authors = pretty_text_list(self.get_authors(), context)
         if authors:
             byline = u'by {}'.format(authors)
-        date = context.EffectiveDate() or context.Date()
+        date = self.date()
         if date:
-            date = DateTime(date)
             date = safe_unicode(
                 date.strftime('%A %B %d, %Y %I:%H') +
                 date.strftime('%p').lower()
