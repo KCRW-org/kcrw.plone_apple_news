@@ -377,7 +377,6 @@ class BaseAppleNewsGenerator(object):
 
     def process_body_images(self, images):
         components = []
-
         for img in images:
             # We call external images "image" and internal "photo"
             component = {
@@ -410,6 +409,7 @@ class BaseAppleNewsGenerator(object):
                         {"role": "caption",
                          "layout": "captionLayout",
                          "style": "captionStyle",
+                         "format": "html",
                          "text": img['description']},
                     ],
                 }
