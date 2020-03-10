@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """Module where all interfaces, events and exceptions live."""
 
-import json.tests.test_dump
+import json
 from zope.interface import Attribute
 from zope.interface import Interface
 from zope.interface import Invalid
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope import schema
-from Products.CMFPlone.log import log_exc
 from kcrw.plone_apple_news import _
 
 
