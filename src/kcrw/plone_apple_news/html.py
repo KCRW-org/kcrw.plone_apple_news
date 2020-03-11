@@ -36,6 +36,18 @@ def strip_outer(s):
     return s[5:-6]
 
 
+def is_empty(el):
+    if el.text and el.text.strip():
+        return False
+    for sub in el:
+        if el.text and el.text.strip():
+            return False
+        if el.tail and el.tail.strip():
+            return False
+        return is_empty(sub)
+    return True
+
+
 def apple_html(text):
     html_parser = html.HTMLParser(remove_blank_text=True)
     tree = html.fragment_fromstring(
@@ -298,8 +310,8 @@ def process_html(text, context):
             after_parts.extend(after)
 
         # Determine if post-split element is empty
-        el = el if (len(list(el)) or (el.text or '').strip() or
-                    (el.tail or '').strip()) else None
+        if is_empty(el):
+            el = None
 
         if before_parts:
             if len(cur_els):
