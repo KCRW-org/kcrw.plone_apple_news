@@ -43,11 +43,11 @@ def mergedicts(dict1, dict2):
         if k in dict1 and k in dict2:
             if isinstance(dict1[k], dict) and isinstance(dict2[k], dict):
                 yield (k, dict(mergedicts(dict1[k], dict2[k])))
-            else:
+            elif dict2[k] is not None:
                 yield (k, dict2[k])
-        elif k in dict1:
+        elif k in dict1 and dict1[k] is not None:
             yield (k, dict1[k])
-        else:
+        elif dict2[k] is not None:
             yield (k, dict2[k])
 
 

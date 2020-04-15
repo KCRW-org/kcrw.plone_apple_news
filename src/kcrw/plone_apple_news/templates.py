@@ -28,7 +28,7 @@ ARTICLE_BASE = {
         "default-title": {
             "fontSize": 45,
             "lineHeight": 48,
-            "fontWeight": "bold",
+            "fontName": "Verdana-Bold",
             "hyphenation": False,
         },
         "default-intro": {
