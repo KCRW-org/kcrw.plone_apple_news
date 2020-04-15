@@ -3,9 +3,10 @@ from copy import deepcopy
 from Acquisition import aq_base
 from DateTime import DateTime
 from zope.annotation.interfaces import IAnnotations
-from zope.component import adapter
+from zope.component import adapter, queryUtility
 from zope.interface import implementer
 from plone.api import user
+from plone.i18n.normalizer.interfaces import IFileNameNormalizer
 try:
     from Products.Archetypes.interfaces import IBaseContent
 except ImportError:
@@ -203,6 +204,9 @@ class BaseAppleNewsGenerator(object):
                             ctype = image.getContentType()
                             ext = CONTENT_TYPE_MAP.get(ctype, '')
                             fname += ext
+                    normalizer = queryUtility(IFileNameNormalizer)
+                    if normalizer is not None:
+                        fname = normalizer.normalize(fname)
                     return fname
             return None
         # Otherwise attribute lookup

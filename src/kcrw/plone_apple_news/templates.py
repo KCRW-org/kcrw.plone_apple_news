@@ -18,6 +18,7 @@ ARTICLE_BASE = {
     },
     "componentTextStyles": {
         "default": {
+            "fontFamily": "Helvetica",
             "fontName": "Helvetica",
             "fontSize": 18,
             "lineHeight": 25,
@@ -43,7 +44,6 @@ ARTICLE_BASE = {
             "hyphenation": True,
         },
         "default-caption": {
-            "fontName": "Verdana",
             "fontSize": 14,
             "textAlignment": "center",
             "textColor": "#86868b",
