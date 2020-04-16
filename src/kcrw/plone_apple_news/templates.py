@@ -18,8 +18,8 @@ ARTICLE_BASE = {
     },
     "componentTextStyles": {
         "default": {
-            "fontFamily": "Helvetica",
             "fontName": "Helvetica",
+            "fontFamily": "Helvetica",
             "fontSize": 18,
             "lineHeight": 25,
             "linkStyle": {
