@@ -8,7 +8,7 @@ ARTICLE_BASE = {
     },
     "components": [],
     "documentStyle": {
-        "backgroundColor": "#fbfbfd",
+        "backgroundColor": "#ffffff",
     },
     "textStyles": {
         "class-style-discreet": {
