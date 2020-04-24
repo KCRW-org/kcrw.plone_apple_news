@@ -3,7 +3,7 @@ ARTICLE_BASE = {
     "layout": {
         "columns": 12,
         "width": 1280,
-        "margin": 120,
+        "margin": 60,
         "gutter": 20,
     },
     "components": [],
@@ -14,7 +14,10 @@ ARTICLE_BASE = {
         "class-style-discreet": {
             "textColor": "#86868b",
             "fontSize": 14,
-        }
+        },
+        "style-underline": {
+            "underline": True,
+        },
     },
     "componentTextStyles": {
         "default": {
@@ -41,6 +44,8 @@ ARTICLE_BASE = {
         },
         "default-body": {
             "hyphenation": True,
+            "paragraphSpacingAfter": 18,
+            "paragraphSpacingBefore": 18,
         },
         "default-caption": {
             "fontSize": 14,

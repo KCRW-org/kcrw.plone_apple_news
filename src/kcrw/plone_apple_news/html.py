@@ -97,6 +97,13 @@ def class_to_style(tree, context=None):
             el.set('data-anf-textstyle', style)
 
 
+def add_underlines(tree, context=None):
+    """Resolve any resolveuid links"""
+    for el in tree.xpath('.//*[contains(@style, "underline")]'):
+        if not el.get('data-anf-textstyle'):
+            el.set('data-anf-textstyle', 'style-underline')
+
+
 def fix_hrefs(tree, context):
     """Resolve any resolveuid links"""
     resolver = ResolveUIDAndCaptionFilter(context)
@@ -270,6 +277,7 @@ class HTMLProcessorRegistry(object):
 
 processor_registry = HTMLProcessorRegistry()
 processor_registry.register_filter('class_styles', class_to_style)
+processor_registry.register_filter('underlines', add_underlines)
 processor_registry.register_filter('resolve_hrefs', fix_hrefs)
 processor_registry.register_splitter('images', find_images, split_images)
 processor_registry.register_splitter('webvideo', find_videos, split_videos)
