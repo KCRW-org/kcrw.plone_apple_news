@@ -100,7 +100,7 @@ ARTICLE_BASE = {
         "leadPhotoCaptionLayout": {
             "ignoreViewportPadding": True,
             "ignoreDocumentMargin": True,
-            "padding": {
+            "margin": {
                 "top": 2,
                 "bottom": 2,
             },
@@ -114,7 +114,7 @@ ARTICLE_BASE = {
         "imageLeft": {
             "columnSpan": 4,
             "padding": {
-                "top": 10,
+                "top": 0,
                 "right": 5,
                 "bottom": 10,
             },
@@ -122,7 +122,7 @@ ARTICLE_BASE = {
         "imageRight": {
             "columnStart": 8,
             "padding": {
-                "top": 10,
+                "top": 0,
                 "bottom": 10,
                 "left": 5,
             },
@@ -130,7 +130,7 @@ ARTICLE_BASE = {
         "bodyPhoto": {
             "columnStart": 1,
             "columnSpan": 10,
-            "padding": {
+            "margin": {
                 "top": 40,
                 "bottom": 40,
             },
@@ -144,7 +144,8 @@ ARTICLE_BASE = {
         "bodyImage": {},
         "bodyVideoEmbed": {
             "margin": {
-                "bottom": 60,
+                "top": 20,
+                "bottom": 20,
             }
         },
     },
