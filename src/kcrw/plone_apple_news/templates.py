@@ -8,11 +8,11 @@ ARTICLE_BASE = {
     },
     "components": [],
     "documentStyle": {
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#FFFFFF",
     },
     "textStyles": {
         "class-style-discreet": {
-            "textColor": "#86868b",
+            "textColor": "#86868B",
             "fontSize": 14,
         },
         "style-underline": {
@@ -25,7 +25,7 @@ ARTICLE_BASE = {
             "fontSize": 18,
             "lineHeight": 25,
             "linkStyle": {
-                "textColor": "#1d1d1f",
+                "textColor": "#1D1D1F",
             },
         },
         "default-title": {
@@ -40,7 +40,7 @@ ARTICLE_BASE = {
         "default-byline": {
             "fontSize": 14,
             "hyphenation": False,
-            "textColor": "#86868b",
+            "textColor": "#86868B",
         },
         "default-body": {
             "hyphenation": True,
@@ -50,7 +50,7 @@ ARTICLE_BASE = {
         "default-caption": {
             "fontSize": 14,
             "textAlignment": "center",
-            "textColor": "#86868b",
+            "textColor": "#86868B",
         },
         "body-container": {},
         "body-section-first": {},
