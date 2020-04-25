@@ -206,7 +206,7 @@ class BaseAppleNewsGenerator(object):
                             fname += ext
                     normalizer = queryUtility(IFileNameNormalizer)
                     if normalizer is not None:
-                        fname = normalizer.normalize(fname)
+                        fname = normalizer.normalize(safe_unicode(fname))
                     return fname
             return None
         # Otherwise attribute lookup
