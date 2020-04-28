@@ -1,3 +1,4 @@
+import pprint
 from plone.app.registry.browser import controlpanel
 from Products.CMFPlone.log import log_exc
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -36,3 +37,6 @@ class AppleNewsSettingsForm(controlpanel.RegistryEditForm):
 class AppleNewsSettingsControlPanel(controlpanel.ControlPanelFormWrapper):
     form = AppleNewsSettingsForm
     index = ViewPageTemplateFile('templates/control_panel.pt')
+
+    def pprint(self, obj):
+        return pprint.pformat(obj)

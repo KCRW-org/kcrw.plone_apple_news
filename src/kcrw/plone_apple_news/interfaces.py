@@ -65,6 +65,11 @@ class IAppleNewsSettings(Interface):
         default=u'preview',
         required=True
     )
+    footer_html = schema.Text(
+        title=_(u'Footer HTML'),
+        description=_(u'Optional custom HTML for article footers'),
+        required=False
+    )
     article_customizations = schema.Text(
         title=_(u'Custom Article JSON'),
         description=_(u'Customized Article JSON for e.g. style and layout.'

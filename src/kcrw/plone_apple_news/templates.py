@@ -70,7 +70,8 @@ ARTICLE_BASE = {
         "bodyPhotoContainerStyle": {},
         "captionStyle": {},
         "bodyImageStyle": {},
-        "bodyVideoEmbedStyle": {}
+        "bodyVideoEmbedStyle": {},
+        "footerStyle": {},
     },
     "componentLayouts": {
         "headerLayout": {
@@ -131,8 +132,8 @@ ARTICLE_BASE = {
             "columnStart": 1,
             "columnSpan": 10,
             "margin": {
-                "top": 40,
-                "bottom": 40,
+                "top": 20,
+                "bottom": 20,
             },
         },
         "captionLayout": {
@@ -146,7 +147,13 @@ ARTICLE_BASE = {
             "margin": {
                 "top": 20,
                 "bottom": 20,
-            }
+            },
+        },
+        "footerLayout": {
+            "margin": {
+                "top": 10,
+                "bottom": 40,
+            },
         },
     },
     "metadata": {

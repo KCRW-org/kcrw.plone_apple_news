@@ -52,4 +52,12 @@
       import_steps="catalog"
       />
 
+  <genericsetup:upgradeDepends
+      source="1001"
+      destination="1002"
+      profile="kcrw.plone_apple_news:default"
+      title="Update control panel fields"
+      import_steps="plone.app.registry"
+      />
+
 </configure>

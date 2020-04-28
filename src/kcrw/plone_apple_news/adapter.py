@@ -169,6 +169,7 @@ class BaseAppleNewsGenerator(object):
     primary_scale = None
     thumb_scale = 'medium'
     body_scale = 'large'
+    footer = None
 
     def __init__(self, context):
         self.context = context
@@ -179,6 +180,8 @@ class BaseAppleNewsGenerator(object):
             self.body_scale = getattr(settings, 'body_scale', u'large')
             if getattr(settings, 'thumb_scale', None):
                 self.thumb_scale = settings.thumb_scale
+            if getattr(settings, 'footer_html', None):
+                self.footer = settings.footer_html.strip()
 
     def article_data(self):
         """Gets JSON formatted article data"""
@@ -399,6 +402,9 @@ class BaseAppleNewsGenerator(object):
         body = self.body_component()
         if body:
             components.append(body)
+        footer = self.footer_component()
+        if footer:
+            components.append(footer)
         return components
 
     def process_part(self, part):
@@ -506,6 +512,31 @@ class BaseAppleNewsGenerator(object):
             # We have an image scale
         if components:
             return section
+
+    def footer_component(self):
+        component = {}
+        if self.footer:
+            footer_components = process_html(self.footer, self.context)
+            if len(footer_components):
+                component = {
+                    "role": "aside",
+                    "layout": "footerLayout",
+                    "style": "footerStyle",
+                    "components": [],
+                }
+                components = component['components']
+                for i, part in enumerate(footer_components):
+                    if isinstance(part, six.string_types):
+                        components.append({
+                            "role": "body",
+                            "format": "html",
+                            "text": part
+                        })
+                    continue
+                rendered_part = self.process_part(part)
+                if rendered_part:
+                    components.extend(rendered_part)
+        return component
 
 
 @indexer(IAppleNewsSupport)

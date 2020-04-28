@@ -35,7 +35,7 @@
           <dl>
             <tal:items tal:repeat="item view/form_instance/channel_info/data/items">
             <dt>${python:item[0]}</dt>
-            <dd>${python:item[1]}</dd>
+            <dd><pre>${python:view.pprint(item[1])}</pre></dd>
             </tal:items>
             </dl>
         </div>
