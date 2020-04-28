@@ -241,8 +241,8 @@ class BulkAppleNewsForm(BrowserView):
                     count, len(brains) - count
                 ), type=u"info"
             )
-            if messages:
-                msg_adapter.add(u'<br />'.join(messages), type=u'error')
+            for msg in messages:
+                msg_adapter.add(msg, type=u'error')
 
     def __call__(self):
         """Call update and render"""
