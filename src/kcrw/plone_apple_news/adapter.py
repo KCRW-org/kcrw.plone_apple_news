@@ -34,6 +34,16 @@ CONTENT_TYPE_MAP = {
     'image/tiff': '.tif',
 }
 
+META_FIELDS = set((
+    'isCandidateToBeFeatured',
+    'isHidden',
+    'isPreview',
+    'isSponsored',
+    'links',
+    'maturityRating',
+    'targetTerritoryCountryCodes',
+))
+
 
 @adapter(IAppleNewsSupport)
 @implementer(IAppleNewsActions)
@@ -56,11 +66,19 @@ class AppleNewsActions(object):
     def data(self):
         return IAnnotations(self.context).get(self.annotations_key, {})
 
-    def update_revision(self, article_data):
+    def update_from_apple(self, article_data):
         IAnnotations(self.context)[self.annotations_key] = {
             'id': article_data['data'].get('id'),
-            'revision': article_data['data'].get('revision')
+            'revision': article_data['data'].get('revision'),
+            'metadata': self.extract_metadata(article_data),
         }
+
+    def extract_metadata(self, article_data):
+        data = article_data.get('data', {})
+        meta = {k: data[k] for k in META_FIELDS if k in data}
+        if 'links' in meta and 'self' in meta['links']:
+            del meta['links']['self']
+        return meta
 
     def create_article(self):
         if self.data:
@@ -70,7 +88,7 @@ class AppleNewsActions(object):
         metadata = adapter.article_metadata()
         assets = adapter.article_assets()
         article_data = self.api.create_article(article, metadata, assets)
-        self.update_revision(article_data)
+        self.update_from_apple(article_data)
         self.context.reindexObject(idxs=['has_apple_news'])
         return article_data
 
@@ -84,10 +102,16 @@ class AppleNewsActions(object):
         if not metadata:
             metadata = {'data': {}}
         metadata['data']['revision'] = self.data['revision']
+
+        # Update metadata with stored data from Apple News
+        self.refresh_revision()
+        metadata['data'].update(self.data.get('metadata', {}))
+
+        # Publish updates
         article_data = self.api.update_article(
             self.data['id'], metadata, article, assets
         )
-        self.update_revision(article_data)
+        self.update_from_apple(article_data)
         return article_data
 
     def update_metadata(self, additional_data=None):
@@ -100,12 +124,17 @@ class AppleNewsActions(object):
         if not metadata:
             metadata = {'data': {}}
         metadata['data']['revision'] = self.data['revision']
+
+        # Update metadata with stored data from Apple News
+        self.refresh_revision()
+        metadata['data'].update(self.data.get('metadata', {}))
+
         if additional_data:
             metadata = dict(mergedicts(metadata, additional_data))
         article_data = self.api.update_article(
             self.data['id'], metadata, article_meta
         )
-        self.update_revision(article_data)
+        self.update_from_apple(article_data)
         return article_data
 
     def delete_article(self):
@@ -127,7 +156,7 @@ class AppleNewsActions(object):
         if not self.data:
             raise AppleNewsError('Article not yet published')
         article_data = self.api.read_article(self.data['id'])
-        self.update_revision(article_data)
+        self.update_from_apple(article_data)
 
 
 @adapter(IDublinCore)

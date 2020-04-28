@@ -81,7 +81,7 @@ class AppleNewsActions(BrowserView):
                 message = _(
                     u'Unable to update article ({}) because'.format(
                         adapter.data['id']
-                    ) + u'it has conflicting changes.'
+                    ) + u'it has conflicting changes. Retry again to refresh.'
                 )
             else:
                 message = _(
