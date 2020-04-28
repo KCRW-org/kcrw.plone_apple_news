@@ -101,12 +101,12 @@ class AppleNewsActions(object):
         assets = adapter.article_assets()
         if not metadata:
             metadata = {'data': {}}
-        metadata['data']['revision'] = self.data['revision']
 
         # Update metadata with stored data from Apple News
         self.refresh_revision()
         metadata['data'].update(self.data.get('metadata', {}))
 
+        metadata['data']['revision'] = self.data['revision']
         # Publish updates
         article_data = self.api.update_article(
             self.data['id'], metadata, article, assets
@@ -123,12 +123,12 @@ class AppleNewsActions(object):
         metadata = adapter.article_metadata()
         if not metadata:
             metadata = {'data': {}}
-        metadata['data']['revision'] = self.data['revision']
 
         # Update metadata with stored data from Apple News
         self.refresh_revision()
         metadata['data'].update(self.data.get('metadata', {}))
 
+        metadata['data']['revision'] = self.data['revision']
         if additional_data:
             metadata = dict(mergedicts(metadata, additional_data))
         article_data = self.api.update_article(
