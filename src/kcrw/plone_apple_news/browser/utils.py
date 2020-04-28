@@ -2,12 +2,17 @@ import json
 import six
 import zipfile
 from AccessControl import ClassSecurityInfo, Unauthorized
+from zope.component import getMultiAdapter
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
+from plone.batching import Batch
 from plone.protect import CheckAuthenticator
 from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.log import log
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from zExceptions import NotFound
 from ..interfaces import IAppleNewsActions
@@ -178,3 +183,68 @@ class AppleNewsActions(BrowserView):
                 return value
             else:
                 raise NotFound
+
+
+class BulkAppleNewsForm(BrowserView):
+    """Form for finding and updating Apple news articles in bulk"""
+    template = ViewPageTemplateFile('templates/bulk_update.pt')
+    batch = ()
+    label = u'Bulk Update Apple News Articles'
+
+    def update(self):
+        uids = []
+        request = self.request
+        b_start = request.form.get('b_start', 0)
+        catalog = getToolByName(self.context, 'portal_catalog')
+        self.batch = Batch(
+            catalog(has_apple_news=True, sort_on='Date', sort_order='descending'),
+            start=b_start, size=50
+        )
+        if request.method.lower() == 'post':
+            messages = []
+            authenticator = getMultiAdapter(
+                (self.context, request), name=u"authenticator"
+            )
+            if not authenticator.verify():
+                raise Unauthorized
+            uids = request.get('uids', [])
+            if not uids:
+                return
+            count = 0
+            brains = catalog(has_apple_news=True, UID=uids)
+            for b in brains:
+                obj = b.getObject()
+                adapter = IAppleNewsActions(obj, alternate=None)
+                if adapter is not None:
+                    try:
+                        adapter.update_article()
+                        count += 1
+                    except AppleNewsError as e:
+                        log(u'Handled Apple News Error in bulk update '
+                            u'{}: {}'.format(e, e.data))
+                        if e.code == 409:
+                            messages.append(
+                                u'Unable to update article "{}" '.format(
+                                    safe_unicode(b.Title)
+                                ) + u'because there are conflicting changes '
+                                u'in Apple News Publisher'
+                            )
+                        else:
+                            messages.append(
+                                u'Unable to update article "{}" '.format(
+                                    safe_unicode(b.Title)
+                                ) + u'check logs for details.'
+                            )
+            msg_adapter = IStatusMessage(self.request)
+            msg_adapter.add(
+                u'Updated {} Apple News article with {} errors'.format(
+                    count, len(brains) - count
+                ), type=u"info"
+            )
+            if messages:
+                msg_adapter.add(u'<br />'.join(messages), type=u'error')
+
+    def __call__(self):
+        """Call update and render"""
+        self.update()
+        return self.template()

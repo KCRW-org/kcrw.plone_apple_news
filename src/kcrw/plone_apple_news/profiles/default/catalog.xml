@@ -1,0 +1,6 @@
+<object name="portal_catalog" meta_type="Plone Catalog Tool">
+ <index name="has_apple_news" meta_type="FieldIndex">
+   <indexed_attr value="has_apple_news"/>
+ </index>
+ <column value="has_apple_news" />
+</object>

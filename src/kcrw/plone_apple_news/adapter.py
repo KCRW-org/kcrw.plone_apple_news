@@ -6,6 +6,7 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter, queryUtility
 from zope.interface import implementer
 from plone.api import user
+from plone.indexer import indexer
 from plone.i18n.normalizer.interfaces import IFileNameNormalizer
 try:
     from Products.Archetypes.interfaces import IBaseContent
@@ -70,6 +71,7 @@ class AppleNewsActions(object):
         assets = adapter.article_assets()
         article_data = self.api.create_article(article, metadata, assets)
         self.update_revision(article_data)
+        self.context.reindexObject(idxs=['has_apple_news'])
         return article_data
 
     def update_article(self):
@@ -118,6 +120,7 @@ class AppleNewsActions(object):
                 del IAnnotations(self.context)[self.annotations_key]
             raise
         del IAnnotations(self.context)[self.annotations_key]
+        self.context.reindexObject(idxs=['has_apple_news'])
 
     def refresh_revision(self):
         """Retrieves info about existing Apple News Article"""
@@ -474,3 +477,9 @@ class BaseAppleNewsGenerator(object):
             # We have an image scale
         if components:
             return section
+
+
+@indexer(IAppleNewsSupport)
+def has_apple_news(obj):
+    adapter = IAppleNewsActions(obj)
+    return bool(adapter.data.get('id'))

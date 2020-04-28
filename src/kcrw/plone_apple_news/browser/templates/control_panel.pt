@@ -21,6 +21,11 @@
       Portal status message
     </div>
 
+    <a id="bulk-update-link"
+       tal:attributes="href string:${portal_url}/@@apple-news-bulk-controlpanel">
+        Bulk Update Apple News Articles
+    </a>
+
     <div id="content-core">
         <div id="layout-contents">
             <span tal:replace="structure view/contents" />

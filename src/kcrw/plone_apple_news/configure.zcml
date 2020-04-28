@@ -42,5 +42,14 @@
 
   <adapter factory=".adapter.AppleNewsActions" />
   <adapter factory=".adapter.BaseAppleNewsGenerator" />
+  <adapter factory=".adapter.has_apple_news" name="has_apple_news" />
+
+  <genericsetup:upgradeDepends
+      source="1000"
+      destination="1001"
+      profile="kcrw.plone_apple_news:default"
+      title="Add catalog indexes"
+      import_steps="catalog"
+      />
 
 </configure>

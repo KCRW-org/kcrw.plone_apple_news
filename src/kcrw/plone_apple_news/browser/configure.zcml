@@ -21,4 +21,12 @@
       layer="..interfaces.IKcrwPloneAppleNewsLayer"
       />
 
+  <browser:page
+      name="apple-news-bulk-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".utils.BulkAppleNewsForm"
+      permission="plone.app.controlpanel.Overview"
+      layer="..interfaces.IKcrwPloneAppleNewsLayer"
+      />
+
 </configure>
