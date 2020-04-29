@@ -339,7 +339,7 @@ class BaseAppleNewsGenerator(object):
             text = getattr(context, text_field).raw
 
         if text:
-            return process_html(text, self.context)
+            return self.html_to_components(text)
 
     def article_components(self):
         components = [{
@@ -480,19 +480,9 @@ class BaseAppleNewsGenerator(object):
 
         return components
 
-    def body_component(self):
-        """Splits HTML text into components separated by photo objects.
-           Adds internal images as assets. Resolves UID links. Removes
-           HTML not allowed by Apple News."""
+    def html_to_components(self, html):
         components = []
-        section = {
-            "role": "container",
-            "textStyle": "body-container",
-            "layout": "bodyLayout",
-            "style": "bodyStyle",
-            "components": components
-        }
-        parts = self.get_body_parts() or []
+        parts = process_html(html, self.context)
         total = len(parts)
         for i, part in enumerate(parts):
             if isinstance(part, six.string_types):
@@ -509,33 +499,34 @@ class BaseAppleNewsGenerator(object):
             rendered_part = self.process_part(part)
             if rendered_part:
                 components.extend(rendered_part)
-            # We have an image scale
+        return components
+
+    def body_component(self):
+        """Splits HTML text into components separated by photo objects.
+           Adds internal images as assets. Resolves UID links. Removes
+           HTML not allowed by Apple News."""
+        components = self.get_body_parts() or []
+        section = {
+            "role": "container",
+            "textStyle": "body-container",
+            "layout": "bodyLayout",
+            "style": "bodyStyle",
+            "components": components
+        }
         if components:
             return section
 
     def footer_component(self):
         component = {}
         if self.footer:
-            footer_components = process_html(self.footer, self.context)
-            if len(footer_components):
+            components = self.html_to_components(self.footer)
+            if len(components):
                 component = {
                     "role": "aside",
                     "layout": "footerLayout",
                     "style": "footerStyle",
-                    "components": [],
+                    "components": components,
                 }
-                components = component['components']
-                for i, part in enumerate(footer_components):
-                    if isinstance(part, six.string_types):
-                        components.append({
-                            "role": "body",
-                            "format": "html",
-                            "text": part
-                        })
-                    continue
-                rendered_part = self.process_part(part)
-                if rendered_part:
-                    components.extend(rendered_part)
         return component
 
 

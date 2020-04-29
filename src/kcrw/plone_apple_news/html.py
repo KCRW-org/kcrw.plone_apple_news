@@ -105,7 +105,7 @@ def add_underlines(tree, context=None):
 
 
 def fix_hrefs(tree, context):
-    """Resolve any resolveuid links"""
+    """Resolve any resolveuid links, and fixup internal links."""
     resolver = ResolveUIDAndCaptionFilter(context)
     for el in tree.findall('.//a'):
         href = el.get('href')
@@ -118,6 +118,10 @@ def fix_hrefs(tree, context):
                 if appendix:
                     href += appendix
                 el.set('href', href)
+            else:
+                new_url = transform_url(href)
+                if new_url and new_url != href:
+                    el.set('href', new_url)
 
 
 def find_images(el):
