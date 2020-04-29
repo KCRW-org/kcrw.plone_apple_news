@@ -53,8 +53,12 @@ ARTICLE_BASE = {
             "textColor": "#86868B",
         },
         "body-container": {},
+        "body-section": {},
         "body-section-first": {},
         "body-section-last": {},
+        "footer-section": {},
+        "footer-section-first": {},
+        "footer-section-last": {},
     },
     "componentStyles": {
         "headerStyle": {},

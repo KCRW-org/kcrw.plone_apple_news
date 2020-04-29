@@ -480,7 +480,7 @@ class BaseAppleNewsGenerator(object):
 
         return components
 
-    def html_to_components(self, html):
+    def html_to_components(self, html, part_name='body'):
         components = []
         parts = process_html(html, self.context)
         total = len(parts)
@@ -489,12 +489,13 @@ class BaseAppleNewsGenerator(object):
                 components.append({
                     "role": "body",
                     "format": "html",
-                    "text": part
+                    "textStyle": '{}-section'.format(part_name),
+                    "text": part,
                 })
                 if i == 0:
-                    components[-1]['textStyle'] = 'body-section-first'
+                    components[-1]['textStyle'] = '{}-section-first'.format(part_name)
                 if i == total + 1:
-                    components[-1]['textStyle'] = 'body-section-last'
+                    components[-1]['textStyle'] = '{}-section-last'.format(part_name)
                 continue
             rendered_part = self.process_part(part)
             if rendered_part:
@@ -519,7 +520,7 @@ class BaseAppleNewsGenerator(object):
     def footer_component(self):
         component = {}
         if self.footer:
-            components = self.html_to_components(self.footer)
+            components = self.html_to_components(self.footer, 'footer')
             if len(components):
                 component = {
                     "role": "aside",
