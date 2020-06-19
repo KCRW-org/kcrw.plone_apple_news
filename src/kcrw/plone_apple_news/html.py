@@ -310,10 +310,10 @@ def process_html(text, context):
             if len(found_els) == 0:
                 continue
 
-            before_anchor = 'section-{}'.format(section_count + 2)
+            before_anchor = 'section-{}'.format(section_count + 1)
             after_anchor = None
             if child_count > (i + 1):
-                after_anchor = 'section-{}'.format(section_count + 3)
+                after_anchor = 'section-{}'.format(section_count + 2)
             before, after = splitter(
                 found_els, before_anchor=before_anchor,
                 after_anchor=after_anchor, context=context
