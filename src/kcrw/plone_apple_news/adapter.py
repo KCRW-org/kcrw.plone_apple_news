@@ -263,7 +263,7 @@ class BaseAppleNewsGenerator(object):
         filename = self.get_image_filename(context, name)
         if filename is not None:
             if scale_name:
-                filename = '{}-{}'.format(scale_name, filename)
+                filename = u'{}-{}'.format(scale_name, safe_unicode(filename))
             if filename not in self.assets:
                 scale_view = context.unrestrictedTraverse('@@images')
                 scale = scale_view.scale(name, scale_name)
