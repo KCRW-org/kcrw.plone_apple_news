@@ -203,7 +203,7 @@ class BaseAppleNewsGenerator(object):
         thumb_name = self.populate_image(context, self.image_name,
                                          self.thumb_scale)
         if thumb_name:
-            meta['thumbnailURL'] = 'bundle://{}'.format(thumb_name)
+            meta['thumbnailURL'] = u'bundle://{}'.format(thumb_name)
 
         return article
 
@@ -377,7 +377,7 @@ class BaseAppleNewsGenerator(object):
         if img_name:
             image = {
                 "role": "photo",
-                "URL": "bundle://{}".format(img_name),
+                "URL": u"bundle://{}".format(img_name),
                 "layout": "leadPhoto",
                 "style": "leadPhotoStyle",
             }
@@ -439,7 +439,7 @@ class BaseAppleNewsGenerator(object):
                         'role': 'photo',
                         "layout": "bodyPhoto",
                         "style": "bodyPhotoStyle",
-                        'URL': 'bundle://{}'.format(filename),
+                        'URL': u'bundle://{}'.format(filename),
                     }
             classes = set(img['classes'])
             if 'captioned' in classes and img['description']:
