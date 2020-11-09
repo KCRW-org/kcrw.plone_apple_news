@@ -383,7 +383,10 @@ class BaseAppleNewsGenerator(object):
             }
             caption = self.get_primary_caption()
             if caption:
-                image["caption"] = caption
+                image["caption"] = {
+                    "text": caption,
+                    "format": "html",
+                }
                 image = {
                     "role": "container",
                     "layout": "leadPhotoContainer",
@@ -440,7 +443,10 @@ class BaseAppleNewsGenerator(object):
                     }
             classes = set(img['classes'])
             if 'captioned' in classes and img['description']:
-                component['caption'] = img['description']
+                component['caption'] = {
+                    "text": img['description'],
+                    "format": "html",
+                }
                 del component['layout']
                 component = {
                     "role": "container",
@@ -482,7 +488,7 @@ class BaseAppleNewsGenerator(object):
 
     def html_to_components(self, html, part_name='body'):
         components = []
-        parts = process_html(html, self.context)
+        parts = process_html(html, self.context, part_name)
         total = len(parts)
         for i, part in enumerate(parts):
             if isinstance(part, six.string_types):

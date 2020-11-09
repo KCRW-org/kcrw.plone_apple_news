@@ -75,7 +75,7 @@ def apple_html(text):
     except AssertionError:
         # some VERY invalid HTML
         return ''
-    return strip_outer(etree.tostring(tree).strip())
+    return strip_outer(etree.tostring(tree, encoding="unicode").strip())
 
 
 def el_list_to_html(els, wrapper_id=None):
@@ -85,7 +85,9 @@ def el_list_to_html(els, wrapper_id=None):
     for sub_el in els:
         section.append(sub_el)
     # Filter tags and remove carriage returns
-    return apple_html(etree.tostring(section)).replace('&#13;', '').strip()
+    return apple_html(
+        etree.tostring(section, encoding="unicode")
+    ).replace(u'&#13;', u'').strip()
 
 
 def class_to_style(tree, context=None):
@@ -287,7 +289,7 @@ processor_registry.register_splitter('images', find_images, split_images)
 processor_registry.register_splitter('webvideo', find_videos, split_videos)
 
 
-def process_html(text, context):
+def process_html(text, context, part_name='body'):
     parts = []
     html_parser = html.HTMLParser(remove_blank_text=True)
     tree = html.fragment_fromstring(
@@ -310,10 +312,10 @@ def process_html(text, context):
             if len(found_els) == 0:
                 continue
 
-            before_anchor = 'section-{}'.format(section_count + 1)
+            before_anchor = '{}-section-{}'.format(part_name, section_count + 1)
             after_anchor = None
             if child_count > (i + 1):
-                after_anchor = 'section-{}'.format(section_count + 2)
+                after_anchor = '{}-section-{}'.format(part_name, section_count + 2)
             before, after = splitter(
                 found_els, before_anchor=before_anchor,
                 after_anchor=after_anchor, context=context
@@ -329,7 +331,7 @@ def process_html(text, context):
             if len(cur_els):
                 section_count += 1
                 parts.append(el_list_to_html(
-                    cur_els, 'section-{}'.format(section_count)
+                    cur_els, '{}-section-{}'.format(part_name, section_count)
                 ))
                 cur_els = []
             parts.extend(before_parts)
@@ -343,7 +345,7 @@ def process_html(text, context):
             if len(cur_els):
                 section_count += 1
                 parts.append(el_list_to_html(
-                    cur_els, 'section-{}'.format(section_count)
+                    cur_els, '{}-section-{}'.format(part_name, section_count)
                 ))
                 cur_els = []
             parts.extend(after_parts)
@@ -351,7 +353,7 @@ def process_html(text, context):
     if cur_els:
         section_count += 1
         parts.append(el_list_to_html(
-            cur_els, 'section-{}'.format(section_count)
+            cur_els, '{}-section-{}'.format(part_name, section_count)
         ))
 
     return parts

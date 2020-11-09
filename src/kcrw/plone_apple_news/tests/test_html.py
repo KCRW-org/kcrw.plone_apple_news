@@ -394,7 +394,7 @@ class TestProcessHTML(unittest.TestCase):
         output = process_html(html, None)
         self.assertEquals(
             output,
-            ['<div id="section-1"><p id="p1">text 1</p>\n<p>Text2</p></div>']
+            ['<div id="body-section-1"><p id="p1">text 1</p>\n<p>Text2</p></div>']
         )
 
     def test_process_with_filters(self):
@@ -422,7 +422,7 @@ class TestProcessHTML(unittest.TestCase):
         output = process_html(html, None)
         self.assertEquals(
             output,
-            ['<div id="section-1"><p id="changed-p1">'
+            ['<div id="body-section-1"><p id="changed-p1">'
              '<a href="#" id="empty-a">data</a>text 1</p>\n'
              '<p>Text2 <span id="changed-span1">sub-text</span></p></div>']
         )
@@ -457,15 +457,15 @@ class TestProcessHTML(unittest.TestCase):
             'special_split', matcher, splitter
         )
 
-        output = process_html(html, None)
+        output = process_html(html, None, 'footer')
         self.assertEquals(
             output,
-            ['<div id="section-1"><p id="p1">text 1</p>\n</div>',
-             'before-el1-anchor-section-2',
-             '<div id="section-2"><p>Text 2 <span id="span1">'
+            ['<div id="footer-section-1"><p id="p1">text 1</p>\n</div>',
+             'before-el1-anchor-footer-section-1',
+             '<div id="footer-section-2"><p>Text 2 <span id="span1">'
              'sub-text</span></p></div>',
-             'after-el1-anchor-section-3',
-             '<div id="section-3"><p>final</p></div>']
+             'after-el1-anchor-footer-section-2',
+             '<div id="footer-section-3"><p>final</p></div>']
         )
         processor_registry.unregister_splitter('special_split')
 
@@ -499,9 +499,9 @@ class TestProcessHTML(unittest.TestCase):
         output = process_html(html, None)
         self.assertEquals(
             output,
-            ['<div id="section-1"><p id="p1">text 1</p>\n</div>',
-             'before-el1-anchor-section-2',
-             '<div id="section-2"><p>Text 2 <span id="span1">'
+            ['<div id="body-section-1"><p id="p1">text 1</p>\n</div>',
+             'before-el1-anchor-body-section-1',
+             '<div id="body-section-2"><p>Text 2 <span id="span1">'
              'sub-text</span></p></div>',
              'after-el1']
         )
