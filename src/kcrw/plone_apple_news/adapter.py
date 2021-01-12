@@ -95,7 +95,8 @@ class AppleNewsActions(object):
 
     def create_article(self):
         if self.data:
-            raise AppleNewsError('Article already published')
+            self.context.reindexObject(idxs=['has_apple_news'])
+            raise AppleNewsError('Article already published', code=418)
         adapter = self.article
         article = adapter.article_data()
         metadata = adapter.article_metadata()
@@ -109,7 +110,7 @@ class AppleNewsActions(object):
 
     def update_article(self):
         if not self.data:
-            raise AppleNewsError('Article not yet published')
+            raise AppleNewsError('Article not yet published', code=418)
         adapter = self.article
         article = adapter.article_data()
         metadata = adapter.article_metadata()
@@ -131,7 +132,7 @@ class AppleNewsActions(object):
 
     def update_metadata(self, additional_data=None):
         if not self.data:
-            raise AppleNewsError('Article not yet published')
+            raise AppleNewsError('Article not yet published', code=418)
         adapter = self.article
         article = adapter.article_data()
         article_meta = {'metadata': article.get('metadata', {})}
@@ -155,7 +156,7 @@ class AppleNewsActions(object):
     def delete_article(self):
         """Publishes a new Apple News Article"""
         if not self.data:
-            raise AppleNewsError('Article not yet published')
+            raise AppleNewsError('Article not yet published', code=418)
         try:
             self.api.delete_article(self.data['id'])
         except AppleNewsError as e:
@@ -170,7 +171,7 @@ class AppleNewsActions(object):
     def refresh_revision(self):
         """Retrieves info about existing Apple News Article"""
         if not self.data:
-            raise AppleNewsError('Article not yet published')
+            raise AppleNewsError('Article not yet published', code=418)
         article_data = self.api.read_article(self.data['id'])
         self.update_from_apple(article_data)
 

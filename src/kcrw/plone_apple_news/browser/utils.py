@@ -60,9 +60,21 @@ class AppleNewsActions(BrowserView):
                                 self.context):
             raise Unauthorized
         adapter = self.get_adapter()
-        article_data = adapter.create_article()
+        try:
+            article_data = adapter.create_article()
+        except AppleNewsError as e:
+            if e.code == 418:
+                IStatusMessage(self.request).addStatusMessage(
+                    _(u"Added new article"),
+                    "info"
+                )
+                return
+            raise
+
         IStatusMessage(self.request).addStatusMessage(
-            _(u"Added new article with id: {}".format(article_data['data']['id'])),
+            _(u'article_added',
+              default=u"Added new article with id: ${article_id}",
+              mapping={u'article_id': article_data['data']['id']}),
             "info"
         )
 
@@ -77,22 +89,32 @@ class AppleNewsActions(BrowserView):
             adapter.update_article()
         except AppleNewsError as e:
             log('Handled Apple News Error {}: {}'.format(e, e.data))
+            article_id = adapter.data.get('id', u'')
             if e.code == 409:
                 message = _(
-                    u'Unable to update article ({}) because'.format(
-                        adapter.data['id']
-                    ) + u'it has conflicting changes. Retry again to refresh.'
+                    u'unable_to_update_article_conflicts',
+                    default=u'Unable to update article (${article_id}) '
+                            u'because it has conflicting changes. '
+                            u'Retry again to refresh.',
+                    mapping={u'article_id': article_id}
                 )
+            elif e.code == 418:
+                message = _(u'Error article not published')
             else:
                 message = _(
-                    u'Error {} updating article ({}).'.format(
-                        e.code, adapter.data['id']
-                    ) + u'See logs for more details.'
+                    u'error_updating_article',
+                    default=u'Error ${error_code} updating article '
+                            u'(${article_id}). See logs for more details.',
+                    mapping={u'error_code': six.text_type(e.code) or u'',
+                             u'article_id': article_id}
                 )
             IStatusMessage(self.request).addStatusMessage(message, "error")
         else:
+            article_id = adapter.data.get('id', u'')
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Updated article with id: {}".format(adapter.data['id'])),
+                _(u'updated_article_success',
+                  default=u"Updated article with id: ${article_id}",
+                  mapping={u'article_id': article_id}),
                 "info"
             )
 
@@ -106,21 +128,28 @@ class AppleNewsActions(BrowserView):
             log('Handled Apple News Error {}: {}'.format(e, e.data))
             if e.code == 404:
                 message = _(
-                    u'Article was already deleted ({}). Clearing Id.'.format(
-                        article_id
-                    )
+                    u'error_article_delete_cleared',
+                    default=u'Article was already deleted (${article_id}). '
+                            u'Clearing Id.',
+                    mapping={u'article_id': article_id}
                 )
-                IStatusMessage(self.request).addStatusMessage(message, "warning")
+                IStatusMessage(self.request).addStatusMessage(
+                    message, "warning"
+                )
             else:
                 message = _(
-                    u'Error {} deleting article ({}).'.format(
-                        e.code, article_id
-                    ) + u'See logs for more details.'
+                    u'error_deleting_article',
+                    default=u'Error ${error_code} deleting article '
+                            u'(${article_id}). See logs for more details.',
+                    mapping={u'error_code': six.text_type(e.code or u''),
+                             u'article_id': article_id}
                 )
                 IStatusMessage(self.request).addStatusMessage(message, "error")
         else:
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Deleted article with id: {}".format(article_id)),
+                _(u'article_deleted',
+                  default=u"Deleted article with id: ${article_id}",
+                  mapping={u'article_id': article_id}),
                 "info"
             )
 
