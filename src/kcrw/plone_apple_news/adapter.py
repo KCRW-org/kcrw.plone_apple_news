@@ -1,4 +1,5 @@
 import six
+import transaction
 from copy import deepcopy
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -73,6 +74,18 @@ class AppleNewsActions(object):
             'metadata': self.extract_metadata(article_data),
         }
 
+    def make_api_request(self, method, *args):
+        """We commit a transaction before making the _slow_ API request,
+        start a new transaction after, and commit after updating internal data.
+        Ideally this would be done via some async processing, which could be handled
+        via a custom adapter."""
+        transaction.commit()
+        article_data = method(*args)
+        transaction.abort()
+        self.update_from_apple(article_data)
+        transaction.commit()
+        return article_data
+
     def extract_metadata(self, article_data):
         data = article_data.get('data', {})
         meta = {k: data[k] for k in META_FIELDS if k in data}
@@ -87,8 +100,10 @@ class AppleNewsActions(object):
         article = adapter.article_data()
         metadata = adapter.article_metadata()
         assets = adapter.article_assets()
-        article_data = self.api.create_article(article, metadata, assets)
-        self.update_from_apple(article_data)
+        article_data = self.make_api_request(
+            self.api.create_article,
+            article, metadata, assets
+        )
         self.context.reindexObject(idxs=['has_apple_news'])
         return article_data
 
@@ -108,10 +123,10 @@ class AppleNewsActions(object):
 
         metadata['data']['revision'] = self.data['revision']
         # Publish updates
-        article_data = self.api.update_article(
+        article_data = self.make_api_request(
+            self.api.update_article,
             self.data['id'], metadata, article, assets
         )
-        self.update_from_apple(article_data)
         return article_data
 
     def update_metadata(self, additional_data=None):
@@ -131,10 +146,10 @@ class AppleNewsActions(object):
         metadata['data']['revision'] = self.data['revision']
         if additional_data:
             metadata = dict(mergedicts(metadata, additional_data))
-        article_data = self.api.update_article(
+        article_data = self.make_api_request(
+            self.api.update_article,
             self.data['id'], metadata, article_meta
         )
-        self.update_from_apple(article_data)
         return article_data
 
     def delete_article(self):
@@ -147,6 +162,7 @@ class AppleNewsActions(object):
             # In case of 404 delete annotation key
             if e.code == 404:
                 del IAnnotations(self.context)[self.annotations_key]
+                self.context.reindexObject(idxs=['has_apple_news'])
             raise
         del IAnnotations(self.context)[self.annotations_key]
         self.context.reindexObject(idxs=['has_apple_news'])
@@ -235,9 +251,9 @@ class BaseAppleNewsGenerator(object):
                     fname = image.getFilename()
                     if not fname:
                         fname = context.getId()
-                        if '.' not in fname:
-                            ctype = image.getContentType()
-                            ext = CONTENT_TYPE_MAP.get(ctype, '')
+                        ctype = image.getContentType()
+                        ext = CONTENT_TYPE_MAP.get(ctype, '')
+                        if ext not in fname.lower():
                             fname += ext
                     normalizer = queryUtility(IFileNameNormalizer)
                     if normalizer is not None:
