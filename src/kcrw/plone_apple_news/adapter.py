@@ -252,10 +252,10 @@ class BaseAppleNewsGenerator(object):
                     fname = image.getFilename()
                     if not fname:
                         fname = context.getId()
-                        ctype = image.getContentType()
-                        ext = CONTENT_TYPE_MAP.get(ctype, '')
-                        if ext not in fname.lower():
-                            fname += ext
+                    ctype = image.getContentType()
+                    ext = CONTENT_TYPE_MAP.get(ctype, '')
+                    if ext not in fname.lower():
+                        fname += ext
                     normalizer = queryUtility(IFileNameNormalizer)
                     if normalizer is not None:
                         fname = normalizer.normalize(safe_unicode(fname))
@@ -270,10 +270,13 @@ class BaseAppleNewsGenerator(object):
             fname = getattr(image, 'filename', None)
             if not fname:
                 fname = context.getId()
-                if '.' not in fname:
-                    ctype = getattr(image, 'contentType', None)
-                    ext = CONTENT_TYPE_MAP.get(ctype, '')
-                    fname += ext
+            ctype = getattr(image, 'contentType', None)
+            ext = CONTENT_TYPE_MAP.get(ctype, '')
+            if ext not in fname.lower():
+                fname += ext
+            normalizer = queryUtility(IFileNameNormalizer)
+            if normalizer is not None:
+                fname = normalizer.normalize(safe_unicode(fname))
             return fname
 
     def populate_image(self, context, name, scale_name):
