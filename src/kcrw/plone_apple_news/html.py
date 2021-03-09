@@ -17,7 +17,10 @@ VIDEO_RE = re.compile(
 def obj_url(obj):
     settings = get_settings()
     if getattr(settings, 'canonical_url', None):
-        url = settings.canonical_url.rstrip('/') + obj.absolute_url(1)
+        url = (
+            settings.canonical_url.rstrip('/') +
+            '/' + obj.absolute_url(1).lstrip('/')
+        )
     else:
         url = obj.absolute_url()
     return url
