@@ -47,7 +47,9 @@ def is_empty(el):
             return False
         if el.tail and el.tail.strip():
             return False
-        return is_empty(sub)
+        sub_status = is_empty(sub)
+        if sub_status is False:
+            return False
     return True
 
 

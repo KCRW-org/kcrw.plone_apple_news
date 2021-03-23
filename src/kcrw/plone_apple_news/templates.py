@@ -117,17 +117,21 @@ ARTICLE_BASE = {
             },
         },
         "imageLeft": {
+            "columnStart": 0,
             "columnSpan": 4,
             "padding": {
                 "top": 0,
                 "right": 5,
                 "bottom": 10,
+                "left": 0,
             },
         },
         "imageRight": {
             "columnStart": 8,
+            "columnSpan": 4,
             "padding": {
                 "top": 0,
+                "right": 0,
                 "bottom": 10,
                 "left": 5,
             },
