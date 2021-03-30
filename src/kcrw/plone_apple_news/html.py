@@ -83,8 +83,11 @@ def apple_html(text):
     return strip_outer(etree.tostring(tree, encoding="unicode").strip())
 
 
-def el_list_to_html(els, wrapper_id=None):
-    section = etree.Element('div')
+def el_list_to_html(els, wrapper_id=None, inline=False):
+    if inline:
+        section = etree.Element('span')
+    else:
+        section = etree.Element('div')
     if wrapper_id is not None:
         section.set('id', wrapper_id)
     for sub_el in els:
@@ -98,7 +101,7 @@ def el_list_to_html(els, wrapper_id=None):
 def class_to_style(tree, context=None):
     """Resolve any resolveuid links"""
     for el in tree.findall('.//*[@class]'):
-        classes = [c for c in el.get('class').split() if c]
+        classes = [c for c in el.get('class', '').split() if c]
         if classes:
             style = 'class-style-{}'.format('|'.join(classes))
             el.set('data-anf-textstyle', style)
@@ -240,6 +243,48 @@ def split_videos(frames, before_anchor=None, after_anchor=None, context=None):
     return [], embeds
 
 
+TAG_MAP = {
+    'h2': 'heading2',
+    'h3': 'heading3',
+    'h4': 'heading4',
+    'h5': 'heading5',
+    'h6': 'heading6',
+}
+
+
+def find_headings(el):
+    matches = []
+    headings = el.findall(".//h2|h3|h4|h5|h6")
+    if el.tag not in TAG_MAP and not len(headings):
+        return matches
+    if el.tag in TAG_MAP:
+        matches.append(el)
+    matches.extend(list(headings))
+    return matches
+
+
+def split_headings(headings, before_anchor=None, after_anchor=None, context=None):
+    components = []
+    for h in headings:
+        tag_type = TAG_MAP.get(h.tag, 'heading')
+        classes = [c for c in h.get('class', '').split() if c]
+        style_suffix = 'Style'
+        if 'large-heading' in classes:
+            tag_type = 'heading1'
+        if 'with-border' in classes:
+            style_suffix = 'WithBorderStyle'
+        component = {
+            "role": tag_type,
+            "text": el_list_to_html(h, inline=True),
+            "format": "html",
+            'layout': 'bodyHeading',
+            'style': 'bodyHeading' + style_suffix,
+        }
+        components.append(component)
+        h.getparent().remove(h)
+    return [], components
+
+
 class HTMLProcessorRegistry(object):
     def __init__(self):
         self.filter_registry = []
@@ -292,6 +337,7 @@ processor_registry.register_filter('underlines', add_underlines)
 processor_registry.register_filter('resolve_hrefs', fix_hrefs)
 processor_registry.register_splitter('images', find_images, split_images)
 processor_registry.register_splitter('webvideo', find_videos, split_videos)
+processor_registry.register_splitter('headings', find_headings, split_headings)
 
 
 def process_html(text, context, part_name='body'):

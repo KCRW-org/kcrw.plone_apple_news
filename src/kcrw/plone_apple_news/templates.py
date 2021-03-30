@@ -69,6 +69,8 @@ ARTICLE_BASE = {
         "leadPhotoStyle": {},
         "leadPhotoCaptionStyle": {},
         "bodyStyle": {},
+        "bodyHeadingStyle": {},
+        "bodyHeadingWithBorderStyle": {},
         "bodyPhotoStyle": {},
         "bodyPhotoInsetStyle": {},
         "bodyPhotoContainerStyle": {},
@@ -134,6 +136,12 @@ ARTICLE_BASE = {
                 "right": 0,
                 "bottom": 10,
                 "left": 5,
+            },
+        },
+        "bodyHeading": {
+            "margin": {
+                "top": 10,
+                "bottom": 10,
             },
         },
         "bodyPhoto": {
