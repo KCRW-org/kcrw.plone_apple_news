@@ -275,7 +275,7 @@ def split_headings(headings, before_anchor=None, after_anchor=None, context=None
             style_suffix = 'WithBorderStyle'
         component = {
             "role": tag_type,
-            "text": el_list_to_html(h, inline=True),
+            "text": el_list_to_html([h], inline=True),
             "format": "html",
             'layout': 'bodyHeading',
             'style': 'bodyHeading' + style_suffix,
