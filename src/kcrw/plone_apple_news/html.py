@@ -244,6 +244,7 @@ def split_videos(frames, before_anchor=None, after_anchor=None, context=None):
 
 
 TAG_MAP = {
+    'h1': 'heading1',
     'h2': 'heading2',
     'h3': 'heading3',
     'h4': 'heading4',
@@ -254,7 +255,7 @@ TAG_MAP = {
 
 def find_headings(el):
     matches = []
-    headings = el.findall(".//h2|h3|h4|h5|h6")
+    headings = el.xpath(".//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]")
     if el.tag not in TAG_MAP and not len(headings):
         return matches
     if el.tag in TAG_MAP:
@@ -273,15 +274,21 @@ def split_headings(headings, before_anchor=None, after_anchor=None, context=None
             tag_type = 'heading1'
         if 'with-border' in classes:
             style_suffix = 'WithBorderStyle'
-        component = {
-            "role": tag_type,
-            "text": el_list_to_html([h], inline=True),
-            "format": "html",
-            'layout': 'bodyHeading',
-            'style': 'bodyHeading' + style_suffix,
-        }
-        components.append(component)
-        h.getparent().remove(h)
+        if h.getparent().getparent() is None or (h.getnext() is None and h.getprevious() is None):
+            component = {
+                "role": tag_type,
+                "text": el_list_to_html([h], inline=True),
+                "format": "html",
+                'layout': 'bodyHeading',
+                'style': 'bodyHeading' + style_suffix,
+            }
+            components.append(component)
+            h.getparent().remove(h)
+        else:
+            # If we're in the middle of things just modify to a paragraph tag
+            # with a heading style
+            h.tag = 'p'
+            h.set('data-anf-textstyle', '{}'.format(tag_type))
     return [], components
 
 
