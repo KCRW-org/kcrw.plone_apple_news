@@ -82,8 +82,10 @@ class AppleNewsActions(object):
         transaction.commit()
         article_data = method(*args)
         transaction.abort()
+        transaction.begin()
         self.update_from_apple(article_data)
         transaction.commit()
+        transaction.begin()
         return article_data
 
     def extract_metadata(self, article_data):
