@@ -8,11 +8,13 @@ from zope.component import adapter, queryUtility
 from zope.interface import implementer
 from plone.api import user
 from plone.indexer import indexer
+from plone.scale.scale import scaleImage
 from plone.i18n.normalizer.interfaces import IFileNameNormalizer
 try:
     from Products.Archetypes.interfaces import IBaseContent
 except ImportError:
     IBaseContent = None
+from OFS.Image import Pdata
 from Products.CMFCore.interfaces import IDublinCore
 from Products.CMFPlone.utils import safe_unicode
 from kcrw.apple_news import API, AppleNewsError
@@ -256,7 +258,7 @@ class BaseAppleNewsGenerator(object):
                         fname = context.getId()
                     ctype = image.getContentType()
                     ext = CONTENT_TYPE_MAP.get(ctype, '')
-                    if ext not in fname.lower():
+                    if not fname.lower().endswith(ext) and not fname.lower().endswith('.jpeg'):
                         fname += ext
                     normalizer = queryUtility(IFileNameNormalizer)
                     if normalizer is not None:
@@ -281,6 +283,28 @@ class BaseAppleNewsGenerator(object):
                 fname = normalizer.normalize(safe_unicode(fname))
             return fname
 
+    @staticmethod
+    def get_image_data(context, name):
+        # Archetypes Support
+        if IBaseContent is not None and IBaseContent.providedBy(context):
+            field = context.getField(name)
+            if field is not None:
+                image = field.get(context)
+                if image is not None:
+                    data = getattr(aq_base(image), 'data', None)
+                if isinstance(data, Pdata):
+                    return str(data)
+        # Otherwise attribute lookup
+        has_image = getattr(
+            aq_base(context), name, None
+        ) is not None
+        if has_image:
+            image = getattr(context, name)
+            try:
+                return image.open()
+            except AttributeError:
+                return getattr(aq_base(image), 'data', image)
+
     def populate_image(self, context, name, scale_name):
         filename = self.get_image_filename(context, name)
         if filename is not None:
@@ -288,9 +312,22 @@ class BaseAppleNewsGenerator(object):
                 filename = u'{}-{}'.format(scale_name, safe_unicode(filename))
             if filename not in self.assets:
                 scale_view = context.unrestrictedTraverse('@@images')
-                scale = scale_view.scale(name, scale_name)
-                if scale is not None:
-                    data = scale.data
+                scales = scale_view.getAvailableSizes()
+                if scale_name not in scales:
+                    return
+                width, height = scales.get(scale_name)
+                data = self.get_image_data(context, name)
+                if not data or not width or not height:
+                    return
+                try:
+                    result = scaleImage(data, direction="thumbnail",
+                                        width=width, height=height,
+                                        allow_webp=False)
+                except TypeError:
+                    result = scaleImage(data, direction="thumbnail",
+                                        width=width, height=height)
+                if result is not None:
+                    data, format_, dimensions = result
                     if not isinstance(data, six.string_types):
                         data = data.data
                     self.assets[filename] = data
