@@ -294,6 +294,7 @@ class BaseAppleNewsGenerator(object):
                     data = getattr(aq_base(image), 'data', None)
                 if isinstance(data, Pdata):
                     return str(data)
+                return data
         # Otherwise attribute lookup
         has_image = getattr(
             aq_base(context), name, None
